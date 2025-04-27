@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import requests
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree
 import os
 import sys
 
@@ -30,8 +30,8 @@ if response.status_code != 200:
     print("Not able to find the sitemap.")
     sys.exit(1)
 
-root = ET.fromstring(response.text)
-namespaces = {"ns": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+root = xml.etree.ElementTree.fromstring(response.text)
+namespaces = {"ns": "https://www.sitemaps.org/schemas/sitemap/0.9"}
 
 course_paths = []
 for url in root.findall("ns:url", namespaces):
@@ -78,7 +78,7 @@ for i, video_name in enumerate(course_paths):
         if "text" not in content_type and "application" not in content_type:
             print(f"Error: {subtitles_url} didn't return a subtitles file (Content-Type: {content_type}).")
         else:
-            # First line of SymfonyCasts subtitles is always "WEBVTT" (at the moment of this being written).
+            # The first line of SymfonyCasts subtitles is always "WEBVTT" (at the moment of this being written).
             lines = subtitles_response.iter_lines(decode_unicode=True)
             try:
                 first_line = next(lines).strip()
